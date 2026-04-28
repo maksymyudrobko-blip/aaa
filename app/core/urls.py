@@ -24,7 +24,7 @@ import tasck
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('tasck.urls'), main = 'tasck' ), # Замініть your_app_name на назву вашого додатку
+    path('', include('tasck.urls'), name = 'tasck' ), # Замініть your_app_name на назву вашого додатку
 ]
 
 if settings.DEBUG:

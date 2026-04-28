@@ -13,10 +13,10 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('board_list')
+            return redirect('tasck/board_list')
     else:
         form = UserCreationForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'tasck/register.html', {'form': form})
 
 
 def login_view(request):
@@ -25,22 +25,22 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('board_list')
+            return redirect('tasck/board_list')
     else:
         form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'tasck/login.html', {'form': form})
 
 
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
-        return redirect('login')
+        return redirect('tasck/login.html')
 
 
 @login_required
 def board_list_view(request):
     boards = Board.objects.filter(Q(owner=request.user) | Q(is_public=True)).distinct()
-    return render(request, 'board_list.html', {'boards': boards})
+    return render(request, 'tasck/board_list.html', {'boards': boards})
 
 
 @login_required
@@ -51,17 +51,17 @@ def board_create_view(request):
             board = form.save(commit=False)
             board.owner = request.user
             board.save()
-            return redirect('board_list')
+            return redirect('tasck/board_list')
     else:
         form = BoardForm()
-    return render(request, 'form_template.html', {'form': form, 'title': 'Створити дошку'})
+    return render(request, 'tasck/form_template.html', {'form': form, 'title': 'Створити дошку'})
 
 
 @login_required
 def board_detail_view(request, board_id):
     board = get_object_or_404(Board, id=board_id)
     tasks = board.tasks.all()
-    return render(request, 'board_detail.html', {'board': board, 'tasks': tasks})
+    return render(request, 'tasck/board_detail.html', {'board': board, 'tasks': tasks})
 
 
 @login_required
@@ -73,10 +73,10 @@ def task_create_view(request, board_id):
             task = form.save(commit=False)
             task.board = board
             task.save()
-            return redirect('board_detail', board_id=board.id)
+            return redirect('tasck/board_detail', board_id=board.id)
     else:
         form = TaskForm()
-    return render(request, 'form_template.html', {'form': form, 'title': 'Нове завдання'})
+    return render(request, 'tasck/form_template.html', {'form': form, 'title': 'Нове завдання'})
 
 
 @login_required
@@ -86,10 +86,10 @@ def task_edit_view(request, task_id):
         form = TaskForm(request.POST, request.FILES, instance=task)
         if form.is_valid():
             form.save()
-            return redirect('task_detail', task_id=task.id)
+            return redirect('tasck/task_detail.html', task_id=task.id)
     else:
         form = TaskForm(instance=task)
-    return render(request, 'form_template.html', {'form': form, 'title': 'Редагувати завдання'})
+    return render(request, 'tasck/form_template.html', {'form': form, 'title': 'Редагувати завдання'})
 
 
 @login_required
@@ -103,10 +103,10 @@ def task_detail_view(request, task_id):
             comment.task = task
             comment.author = request.user
             comment.save()
-            return redirect('task_detail', task_id=task.id)
+            return redirect('tasck/task_detail', task_id=task.id)
     else:
         form = CommentForm()
-    return render(request, 'task_detail.html', {'task': task, 'comments': comments, 'form': form})
+    return render(request, 'tasck/task_detail.html', {'task': task, 'comments': comments, 'form': form})
 
 
 from django.shortcuts import render
