@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 import tasck
 
 urlpatterns = [
+    path('users/', include('users.urls')),
     path('admin/', admin.site.urls),
     path('', include('tasck.urls'), name = 'tasck' ), # Замініть your_app_name на назву вашого додатку
 ]
