@@ -13,7 +13,7 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('tasck/board_list')
+            return redirect('board_list')
     else:
         form = UserCreationForm()
     return render(request, 'tasck/register.html', {'form': form})
@@ -25,7 +25,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('tasck/board_list')
+            return redirect('board_list')
     else:
         form = AuthenticationForm()
     return render(request, 'tasck/login.html', {'form': form})
@@ -34,7 +34,7 @@ def login_view(request):
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
-        return redirect('tasck/login.html')
+        return redirect('login')
 
 
 @login_required
@@ -51,7 +51,7 @@ def board_create_view(request):
             board = form.save(commit=False)
             board.owner = request.user
             board.save()
-            return redirect('tasck/board_list')
+            return redirect('board_list')
     else:
         form = BoardForm()
     return render(request, 'tasck/form_template.html', {'form': form, 'title': 'Створити дошку'})
@@ -73,7 +73,7 @@ def task_create_view(request, board_id):
             task = form.save(commit=False)
             task.board = board
             task.save()
-            return redirect('tasck/board_detail', board_id=board.id)
+            return redirect('board_detail', board_id=board.id)
     else:
         form = TaskForm()
     return render(request, 'tasck/form_template.html', {'form': form, 'title': 'Нове завдання'})
@@ -86,7 +86,7 @@ def task_edit_view(request, task_id):
         form = TaskForm(request.POST, request.FILES, instance=task)
         if form.is_valid():
             form.save()
-            return redirect('tasck/task_detail.html', task_id=task.id)
+            return redirect('task_detail', task_id=task.id)
     else:
         form = TaskForm(instance=task)
     return render(request, 'tasck/form_template.html', {'form': form, 'title': 'Редагувати завдання'})
@@ -103,7 +103,7 @@ def task_detail_view(request, task_id):
             comment.task = task
             comment.author = request.user
             comment.save()
-            return redirect('tasck/task_detail', task_id=task.id)
+            return redirect('task_detail', task_id=task.id)
     else:
         form = CommentForm()
     return render(request, 'tasck/task_detail.html', {'task': task, 'comments': comments, 'form': form})
