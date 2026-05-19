@@ -16,7 +16,7 @@ def register_view(request):
             return redirect('board_list')
     else:
         form = UserCreationForm()
-    return render(request, 'tasck/register.html', {'form': form})
+    return render(request, 'users/register.html', {'form': form})
 
 
 def login_view(request):
